@@ -1101,8 +1101,109 @@ describe('BookService Integration Tests', () => {
 ```
 
 
+### 5. Database Connection Configuration
+
+**`src/data-source.ts`:**
+
+```typescript
+import { DataSource } from 'typeorm';
+import { Book } from './entities/Book';
+import { Author } from './entities/Author';
+import { Publisher } from './entities/Publisher';
+import { BookFormat } from './entities/BookFormat';
+import { Customer } from './entities/Customer';
+import { Purchase } from './entities/Purchase';
+import { Review } from './entities/Review';
+
+export const AppDataSource = new DataSource({
+  type: 'postgres',
+  host: process.env.DB_HOST || 'localhost',
+  port: Number(process.env.DB_PORT) || 5432,
+  username: process.env.DB_USERNAME || 'postgres',
+  password: process.env.DB_PASSWORD || 'password',
+  database: process.env.DB_DATABASE || 'postgres',
+  synchronize: true, // Set this to false if you intend to use migrations
+  logging: false,
+  entities: [
+    Book, 
+    Author, 
+    Publisher, 
+    BookFormat, 
+    Customer, 
+    Purchase, 
+    Review
+  ],
+  migrations: [],
+  subscribers: [],
+});
+
+AppDataSource.initialize()
+  .then(() => {
+    console.log('Data Source has been initialized!');
+  })
+  .catch((err) => {
+    console.error('Error during Data Source initialization:', err);
+  });
+```
 
 
+
+
+
+### 6. Docker Setup
+
+**`docker/Dockerfile`:**
+```dockerfile
+# Use official Node.js image as the base image
+FROM node:18
+
+# Set working directory
+WORKDIR /app
+
+# Copy package.json and install dependencies
+COPY package*.json ./
+RUN npm install
+
+# Copy the rest of the application code
+COPY . .
+
+# Build the application
+RUN npm run build
+
+# Expose the application port (if applicable)
+EXPOSE 3000
+
+# Start the application
+CMD ["npm", "start"]
+```
+
+**`docker/docker-compose.yml`:**
+```yaml
+version: '3.8'
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  app:
+    build: .
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://postgres:password@db:5432/postgres
+    ports:
+      - "3000:3000"
+
+volumes:
+  pgdata:
+```
 
 
 
