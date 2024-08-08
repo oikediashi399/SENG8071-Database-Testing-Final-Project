@@ -1055,7 +1055,50 @@ describe('BookService Unit Tests', () => {
 
 
 
+### 4. Integration Tests
 
+**`src/tests/integration/BookIntegration.test.ts`:**
+```typescript
+import { BookService } from '../../services/BookService';
+import { Book } from '../../entities/Book';
+import { AppDataSource } from '../../data-source';
+
+describe('BookService Integration Tests', () => {
+  let bookService: BookService;
+
+  beforeAll(async () => {
+    await AppDataSource.initialize();
+    bookService = new BookService();
+  });
+
+  afterAll(async () => {
+    await AppDataSource.destroy();
+  });
+
+  test('should create, read, update, delete a book', async () => {
+    const newBook: Book = {
+      book_title: "New Book",
+      book_genre: "Fiction",
+      book_price: 19.99,
+      book_publish_date: new Date(),
+      book_average_rating: 4.5,
+      book_format_id: 1,
+      author_id: 1,
+      publisher_id: 1
+    };
+
+    const createdBook = await bookService.create(newBook);
+    const readBook = await bookService.read(createdBook.book_id!);
+    expect(readBook).toBeDefined();
+    
+    const updatedBook = await bookService.update(createdBook.book_id!, { book_title: "Updated Book" });
+    expect(updatedBook?.book_title).toBe("Updated Book");
+    
+    const deleted = await bookService.delete(createdBook.book_id!);
+    expect(deleted).toBe(true);
+  });
+});
+```
 
 
 
