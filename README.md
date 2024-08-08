@@ -778,3 +778,292 @@ DELETE FROM public."Reviews" WHERE review_id = 1;
 
 
 
+## TypeScript Entities (ORM Models)
+
+### 1. **`src/entities/Book.ts`:**
+```typescript
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Author } from './Author';
+import { Publisher } from './Publisher';
+import { BookFormat } from './BookFormat';
+
+@Entity()
+export class Book {
+  @PrimaryGeneratedColumn()
+  book_id!: number;
+
+  @Column()
+  book_title!: string;
+
+  @Column()
+  book_genre!: string;
+
+  @Column('decimal')
+  book_price!: number;
+
+  @Column('date')
+  book_publish_date!: Date;
+
+  @Column('decimal', { precision: 3, scale: 2 })
+  book_average_rating!: number;
+
+  @ManyToOne(() => BookFormat)
+  book_format!: BookFormat;
+
+  @ManyToOne(() => Author)
+  author!: Author;
+
+  @ManyToOne(() => Publisher)
+  publisher!: Publisher;
+}
+```
+
+### 2. **`src/entities/Author.ts`**
+```typescript
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+
+@Entity()
+export class Author {
+  @PrimaryGeneratedColumn()
+  author_id!: number;
+
+  @Column({ length: 150 })
+  author_name!: string;
+}
+```
+
+### 3. **`src/entities/Publisher.ts`**
+```typescript
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+
+@Entity()
+export class Publisher {
+  @PrimaryGeneratedColumn()
+  publisher_id!: number;
+
+  @Column({ length: 150 })
+  publisher_name!: string;
+}
+```
+
+### 4. **`src/entities/BookFormat.ts`**
+```typescript
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+
+@Entity()
+export class BookFormat {
+  @PrimaryGeneratedColumn()
+  book_format_id!: number;
+
+  @Column({ length: 50 })
+  book_format_name!: string;
+}
+```
+
+### 5. **`src/entities/Customer.ts`**
+```typescript
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+
+@Entity()
+export class Customer {
+  @PrimaryGeneratedColumn()
+  customer_id!: number;
+
+  @Column({ length: 150 })
+  cust_name!: string;
+
+  @Column({ length: 150 })
+  email_address!: string;
+
+  @Column('decimal', { precision: 10, scale: 2, nullable: true })
+  total_spent!: number | null;
+}
+```
+
+### 6. **`src/entities/Purchase.ts`**
+```typescript
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Customer } from './Customer';
+import { Book } from './Book';
+
+@Entity()
+export class Purchase {
+  @PrimaryGeneratedColumn()
+  purchase_id!: number;
+
+  @Column('date')
+  purchase_date!: Date;
+
+  @Column('decimal', { precision: 10, scale: 2 })
+  amount_spent!: number;
+
+  @ManyToOne(() => Customer)
+  customer!: Customer;
+
+  @ManyToOne(() => Book)
+  book!: Book;
+}
+```
+
+### 7. **`src/entities/Review.ts`**
+```typescript
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Customer } from './Customer';
+import { Book } from './Book';
+
+@Entity()
+export class Review {
+  @PrimaryGeneratedColumn()
+  review_id!: number;
+
+  @Column('date')
+  review_date!: Date;
+
+  @Column('decimal', { precision: 3, scale: 2 })
+  rating!: number;
+
+  @Column('text', { nullable: true })
+  comment!: string | null;
+
+  @ManyToOne(() => Customer)
+  customer!: Customer;
+
+  @ManyToOne(() => Book)
+  book!: Book;
+}
+```
+
+
+### 2. CRUD Service for Each Entity
+
+**`src/services/BookService.ts`:**
+```typescript
+import { Repository } from 'typeorm';
+import { Book } from '../entities/Book';
+import { ICRUDService } from '../interfaces/ICRUDService';
+import { AppDataSource } from '../data-source';
+
+export class BookService implements ICRUDService<Book> {
+  private bookRepository: Repository<Book>;
+
+  constructor() {
+    this.bookRepository = AppDataSource.getRepository(Book);
+  }
+
+  async create(item: Book): Promise<Book> {
+    return await this.bookRepository.save(item);
+  }
+
+  async read(id: number): Promise<Book | null> {
+    return await this.bookRepository.findOneBy({ book_id: id });
+  }
+
+  async update(id: number, item: Partial<Book>): Promise<Book | null> {
+    await this.bookRepository.update(id, item);
+    return this.read(id);
+  }
+
+  async delete(id: number): Promise<boolean> {
+    const result = await this.bookRepository.delete(id);
+    return result.affected !== 0;
+  }
+
+  async list(): Promise<Book[]> {
+    return await this.bookRepository.find();
+  }
+}
+```
+
+
+### 3. Unit Tests
+
+### **`src/tests/unit/BookService.test.ts`**
+```typescript
+import { BookService } from '../../services/BookService';
+import { Book } from '../../entities/Book';
+import { AppDataSource } from '../../data-source';
+import { Repository } from 'typeorm';
+
+describe('BookService Unit Tests', () => {
+  let bookService: BookService;
+  let bookRepository: Repository<Book>;
+
+  beforeAll(async () => {
+    await AppDataSource.initialize();
+    bookRepository = AppDataSource.getRepository(Book);
+    bookService = new BookService();
+  });
+
+  afterAll(async () => {
+    await AppDataSource.destroy();
+  });
+
+  test('should create a book', async () => {
+    const newBook: Book = {
+      book_title: "New Book",
+      book_genre: "Fiction",
+      book_price: 19.99,
+      book_publish_date: new Date(),
+      book_average_rating: 4.5,
+      book_format_id: 1,
+      author_id: 1,
+      publisher_id: 1
+    };
+
+    const createdBook = await bookService.create(newBook);
+    expect(createdBook.book_id).toBeDefined();
+    expect(createdBook.book_title).toBe("New Book");
+  });
+
+  test('should read a book by id', async () => {
+    const bookId = 1;
+    const book = await bookService.read(bookId);
+    expect(book).not.toBeNull();
+    if (book) {
+      expect(book.book_id).toBe(bookId);
+      expect(book.book_title).toBeDefined();
+    }
+  });
+
+  test('should update a book by id', async () => {
+    const bookId = 1;
+    const updateData = { book_title: "Updated Book Title" };
+    const updatedBook = await bookService.update(bookId, updateData);
+    expect(updatedBook).not.toBeNull();
+    if (updatedBook) {
+      expect(updatedBook.book_id).toBe(bookId);
+      expect(updatedBook.book_title).toBe("Updated Book Title");
+    }
+  });
+
+  test('should delete a book by id', async () => {
+    const bookId = 1;
+    const deleteResult = await bookService.delete(bookId);
+    expect(deleteResult).toBe(true);
+    
+    const deletedBook = await bookService.read(bookId);
+    expect(deletedBook).toBeNull();
+  });
+
+  test('should list all books', async () => {
+    const books = await bookService.list();
+    expect(books.length).toBeGreaterThan(0);
+    expect(books[0].book_id).toBeDefined();
+  });
+});
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
