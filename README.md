@@ -533,3 +533,53 @@ INSERT INTO public."Reviews" (review_date, rating, comment, customer_id, book_id
 ('2023-06-05', 4.6, 'A powerful and moving historical novel.', 5, 5);
 ```
 
+
+## Entity-Relationship (ER) diagram based on our database design:
+The diagram represents the following relationships:
+1. *Customers*:
+   - customer_id (Primary Key)
+   - cust_name
+   - email_address
+   - total_spent
+
+2. *Authors*:
+   - author_id (Primary Key)
+   - author_name
+
+3. *Publishers*:
+   - publisher_id (Primary Key)
+   - publisher_name
+
+4. *Book_Format*:
+   - book_format_id (Primary Key)
+   - book_format_name
+
+5. *Books*:
+   - book_id (Primary Key)
+   - book_title
+   - book_genre
+   - book_price
+   - book_publish_date
+   - book_average_rating
+   - book_format_id (Foreign Key referencing Book_Format)
+   - author_id (Foreign Key referencing Authors)
+   - publisher_id (Foreign Key referencing Publishers)
+
+6. *Purchases*:
+   - purchase_id (Primary Key)
+   - purchase_date
+   - amount_spent
+   - customer_id (Foreign Key referencing Customers)
+   - book_id (Foreign Key referencing Books)
+
+7. *Reviews*:
+   - review_id (Primary Key)
+   - review_date
+   - rating
+   - comment
+   - customer_id (Foreign Key referencing Customers)
+   - book_id (Foreign Key referencing Books)
+
+THE IMAGE CAN BE FOUND IN THE WORD DOCUMENT
+
+
