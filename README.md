@@ -1207,7 +1207,60 @@ volumes:
 
 
 
+### Project Structure should look like this:
 
+```
+/final-assignment
+│
+├── /src
+│   ├── /entities
+│   │   ├── Book.ts
+│   │   ├── Author.ts
+│   │   ├── Publisher.ts
+│   │   ├── BookFormat.ts
+│   │   ├── Customer.ts
+│   │   ├── Purchase.ts
+│   │   └── Review.ts
+│   ├── /services
+│   │   ├── BookService.ts
+│   │   ├── AuthorService.ts
+│   │   ├── PublisherService.ts
+│   │   ├── BookFormatService.ts
+│   │   ├── CustomerService.ts
+│   │   ├── PurchaseService.ts
+│   │   └── ReviewService.ts
+│   ├── /tests
+│   │   ├── /unit
+│   │   │   ├── BookService.test.ts
+│   │   │   ├── AuthorService.test.ts
+│   │   │   ├── PublisherService.test.ts
+│   │   │   ├── BookFormatService.test.ts
+│   │   │   ├── CustomerService.test.ts
+│   │   │   ├── PurchaseService.test.ts
+│   │   │   └── ReviewService.test.ts
+│   │   ├── /integration
+│   │   │   ├── BookIntegration.test.ts
+│   │   │   ├── AuthorIntegration.test.ts
+│   │   │   ├── PublisherIntegration.test.ts
+│   │   │   ├── BookFormatIntegration.test.ts
+│   │   │   ├── CustomerIntegration.test.ts
+│   │   │   ├── PurchaseIntegration.test.ts
+│   │   │   └── ReviewIntegration.test.ts
+│   ├── /config
+│   │   └── config.ts
+│   ├── data-source.ts
+│   └── index.ts
+│
+├── /migrations
+│   └── (migration files)
+│
+├── /docker
+│   ├── Dockerfile
+│   └── docker-compose.yml
+│
+├── package.json
+└── tsconfig.json
+```
 
 
 
