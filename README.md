@@ -6,7 +6,7 @@ Online Bookstore Database Design: This Project designs a PostgreSQL database for
 ## Group 2 Members and Duties Assigned to Each Individual
 1. **Ogechi Angela Ikediashi** 8913831
     - **Unit Test:** Unit tests that covers the CRUD operations.
-    - **Migration Script:** Creation of a migration script for 3 rows of data in each table.
+    - **CRUD and Migration Script:** Implement CRUD functions to interact with every single table and Creation of a migration script for at least 3 rows of data in each table.
 
 
 2. **Motunrayo Ogunseye** 8953494
@@ -581,5 +581,200 @@ The diagram represents the following relationships:
    - book_id (Foreign Key referencing Books)
 
 THE IMAGE CAN BE FOUND IN THE WORD DOCUMENT
+
+
+
+
+## CRUD functions to interact with every single table
+CRUD (Create, Read, Update, Delete) SQL statements for each table in your database schema:
+These statements cover all basic CRUD operations for interacting with the tables in our Postgres database.
+
+### CRUD Statements for `Customers` Table
+
+#### **Create:**
+```sql
+INSERT INTO public."Customers" (cust_name, email_address, total_spent) 
+VALUES ('John Doe', 'johndoe@example.com', 100.00);
+```
+
+#### **Read:**
+```sql
+SELECT * FROM public."Customers" WHERE customer_id = 1;
+```
+
+#### **Update:**
+```sql
+UPDATE public."Customers" 
+SET cust_name = 'John A. Doe', total_spent = 150.00 
+WHERE customer_id = 1;
+```
+
+#### **Delete:**
+```sql
+DELETE FROM public."Customers" WHERE customer_id = 1;
+```
+
+---
+
+### CRUD Statements for `Authors` Table
+
+#### **Create:**
+```sql
+INSERT INTO public."Authors" (author_name) 
+VALUES ('George Orwell');
+```
+
+#### **Read:**
+```sql
+SELECT * FROM public."Authors" WHERE author_id = 1;
+```
+
+#### **Update:**
+```sql
+UPDATE public."Authors" 
+SET author_name = 'Eric Arthur Blair' 
+WHERE author_id = 1;
+```
+
+#### **Delete:**
+```sql
+DELETE FROM public."Authors" WHERE author_id = 1;
+```
+
+---
+
+### CRUD Statements for `Publishers` Table
+
+#### **Create:**
+```sql
+INSERT INTO public."Publishers" (publisher_name) 
+VALUES ('Penguin Random House');
+```
+
+#### **Read:**
+```sql
+SELECT * FROM public."Publishers" WHERE publisher_id = 1;
+```
+
+#### **Update:**
+```sql
+UPDATE public."Publishers" 
+SET publisher_name = 'Random House' 
+WHERE publisher_id = 1;
+```
+
+#### **Delete:**
+```sql
+DELETE FROM public."Publishers" WHERE publisher_id = 1;
+```
+
+---
+
+### CRUD Statements for `Book_Format` Table
+
+#### **Create:**
+```sql
+INSERT INTO public."Book_Format" (book_format_name) 
+VALUES ('Hardcover');
+```
+
+#### **Read:**
+```sql
+SELECT * FROM public."Book_Format" WHERE book_format_id = 1;
+```
+
+#### **Update:**
+```sql
+UPDATE public."Book_Format" 
+SET book_format_name = 'Paperback' 
+WHERE book_format_id = 1;
+```
+
+#### **Delete:**
+```sql
+DELETE FROM public."Book_Format" WHERE book_format_id = 1;
+```
+
+---
+
+### CRUD Statements for `Books` Table
+
+#### **Create:**
+```sql
+INSERT INTO public."Books" (book_title, book_genre, book_price, book_publish_date, book_average_rating, book_format_id, author_id, publisher_id) 
+VALUES ('1984', 'Dystopian', 9.99, '1949-06-08', 4.8, 1, 1, 1);
+```
+
+#### **Read:**
+```sql
+SELECT * FROM public."Books" WHERE book_id = 1;
+```
+
+#### **Update:**
+```sql
+UPDATE public."Books" 
+SET book_price = 12.99, book_average_rating = 4.9 
+WHERE book_id = 1;
+```
+
+#### **Delete:**
+```sql
+DELETE FROM public."Books" WHERE book_id = 1;
+```
+
+---
+
+### CRUD Statements for `Purchases` Table
+
+#### **Create:**
+```sql
+INSERT INTO public."Purchases" (purchase_date, amount_spent, customer_id, book_id) 
+VALUES ('2023-01-15', 9.99, 1, 1);
+```
+
+#### **Read:**
+```sql
+SELECT * FROM public."Purchases" WHERE purchase_id = 1;
+```
+
+#### **Update:**
+```sql
+UPDATE public."Purchases" 
+SET amount_spent = 10.99 
+WHERE purchase_id = 1;
+```
+
+#### **Delete:**
+```sql
+DELETE FROM public."Purchases" WHERE purchase_id = 1;
+```
+
+---
+
+### CRUD Statements for `Reviews` Table
+
+#### **Create:**
+```sql
+INSERT INTO public."Reviews" (review_date, rating, comment, customer_id, book_id) 
+VALUES ('2023-01-20', 4.8, 'Great book!', 1, 1);
+```
+
+#### **Read:**
+```sql
+SELECT * FROM public."Reviews" WHERE review_id = 1;
+```
+
+#### **Update:**
+```sql
+UPDATE public."Reviews" 
+SET rating = 5.0, comment = 'Amazing read!' 
+WHERE review_id = 1;
+```
+
+#### **Delete:**
+```sql
+DELETE FROM public."Reviews" WHERE review_id = 1;
+```
+
 
 
