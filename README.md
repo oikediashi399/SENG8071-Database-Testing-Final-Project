@@ -464,3 +464,72 @@ testBookService();
 
 
 
+## Migration Script to input data into the Tables in the Database
+
+```sql
+INSERT INTO public."Customers" (cust_name, email_address, total_spent) VALUES
+('John Doe', 'johndoe@example.com', 120.50),
+('Jane Smith', 'janesmith@example.com', 200.00),
+('Alice Johnson', 'alicej@example.com', 150.75),
+('Bob Brown', 'bobbrown@example.com', 180.40),
+('Charlie Davis', 'charlied@example.com', 90.20);
+```
+
+
+```sql
+INSERT INTO public."Authors" (author_name) VALUES
+('George Orwell'),
+('J.K. Rowling'),
+('Jane Austen'),
+('Mark Twain'),
+('Charles Dickens');
+```
+
+
+```sql
+INSERT INTO public."Publishers" (publisher_name) VALUES
+('Penguin Random House'),
+('HarperCollins'),
+('Simon & Schuster'),
+('Hachette Livre'),
+('Macmillan Publishers');
+```
+
+
+```sql
+INSERT INTO public."Book_Format" (book_format_name) VALUES
+('PhysicalBook'),
+('Ebook'),
+('Audiobook');
+```
+
+
+```sql
+INSERT INTO public."Books" (book_title, book_genre, book_price, book_publish_date, book_average_rating, book_format_id, author_id, publisher_id) VALUES
+('1984', 'Dystopian', 9.99, '1949-06-08', 4.8, 1, 1, 1),
+('Harry Potter and the Sorcerer''s Stone', 'Fantasy', 19.99, '1997-06-26', 4.9, 1, 2, 2),
+('Pride and Prejudice', 'Romance', 14.99, '1813-01-28', 4.7, 2, 3, 3),
+('The Adventures of Tom Sawyer', 'Adventure', 12.99, '1876-06-30', 4.5, 2, 4, 4),
+('A Tale of Two Cities', 'Historical Fiction', 11.99, '1859-04-30', 4.6, 1, 5, 5);
+```
+
+
+```sql
+INSERT INTO public."Purchases" (purchase_date, amount_spent, customer_id, book_id) VALUES
+('2023-01-15', 9.99, 1, 1),
+('2023-02-10', 19.99, 2, 2),
+('2023-03-20', 14.99, 3, 3),
+('2023-04-25', 12.99, 4, 4),
+('2023-05-30', 11.99, 5, 5);
+```
+
+
+```sql
+INSERT INTO public."Reviews" (review_date, rating, comment, customer_id, book_id) VALUES
+('2023-01-20', 4.8, 'A compelling and thought-provoking read.', 1, 1),
+('2023-02-15', 4.9, 'Magical and enchanting, a must-read for all ages.', 2, 2),
+('2023-03-25', 4.7, 'A classic tale of love and society.', 3, 3),
+('2023-04-30', 4.5, 'A fun and adventurous story.', 4, 4),
+('2023-06-05', 4.6, 'A powerful and moving historical novel.', 5, 5);
+```
+
